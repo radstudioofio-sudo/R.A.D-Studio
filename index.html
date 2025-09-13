@@ -32,16 +32,17 @@
       border-radius: 20px;
       text-decoration: none;
       font-weight: bold;
+      cursor: pointer;
     }
     .profile {
       color: #e5e9f0;
       font-size: 20px;
       margin-left: 15px;
       text-decoration: none;
+      cursor: pointer;
     }
-    .profile:hover {
-      color: #a4be8c;
-    }
+    .profile:hover { color: #a4be8c; }
+    #profile-name { margin-left: 8px; font-weight: bold; display: none; }
     .hero {
       position: relative;
       height: 500px;
@@ -58,8 +59,6 @@
       width: 100%;
     }
     .hero h1 { font-size: 2.5rem; }
-
-    /* Puntos de navegación */
     .dots {
       position: absolute;
       bottom: 15px;
@@ -76,9 +75,32 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-    .dot.active {
-      background: #a4be8c;
+    .dot.active { background: #a4be8c; }
+    /* Modal login/register */
+    #auth-modal {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      justify-content: center; align-items: center;
     }
+    .auth-content {
+      background: #3b4252;
+      padding: 20px;
+      border-radius: 12px;
+      width: 300px;
+      text-align: center;
+      position: relative;
+    }
+    .auth-content h2 { margin-bottom: 15px; }
+    .auth-content input {
+      width: 100%; padding: 10px; margin: 8px 0;
+      border: none; border-radius: 6px;
+    }
+    .close-auth {
+      position: absolute; top: 10px; right: 10px;
+      cursor: pointer; font-size: 18px;
+    }
+    .switch { color: #a4be8c; cursor: pointer; display: block; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -86,7 +108,7 @@
     <a href="index.html" class="logo"><i class="fas fa-dragon"></i> AnimeFlix</a>
     <div>
       <a href="player.html" class="btn"><i class="fas fa-play"></i> Ver Ahora</a>
-      <a href="profile.html" class="profile"><i class="fas fa-user-circle"></i></a>
+      <span id="profile-btn" class="profile"><i class="fas fa-user-circle"></i><span id="profile-name"></span></span>
     </div>
   </header>
 
@@ -99,39 +121,35 @@
     <div class="dots" id="dots"></div>
   </section>
 
-  <script>
-    // Lista de animes
-    const animes = [
-      {
-        title: "Demon Slayer: Kimetsu no Yaiba",
-        desc: "Tanjiro Kamado es un joven que se gana la vida para su familia vendiendo carbón...",
-        img: "https://cdn.myanimelist.net/images/anime/1286/99889.jpg"
-      },
-      {
-        title: "Attack on Titan",
-        desc: "La humanidad lucha por sobrevivir tras los muros contra los titanes devoradores de hombres.",
-        img: "https://cdn.myanimelist.net/images/anime/10/47347.jpg"
-      },
-      {
-        title: "Jujutsu Kaisen",
-        desc: "Yuji Itadori se une a una escuela de hechicería para luchar contra maldiciones poderosas.",
-        img: "https://cdn.myanimelist.net/images/anime/1171/109222.jpg"
-      },
-      {
-        title: "One Piece",
-        desc: "Monkey D. Luffy y su tripulación navegan en busca del legendario tesoro One Piece.",
-        img: "https://cdn.myanimelist.net/images/anime/6/73245.jpg"
-      }
-    ];
+  <!-- Modal Auth -->
+  <div id="auth-modal">
+    <div class="auth-content">
+      <span class="close-auth">&times;</span>
+      <h2 id="auth-title">Iniciar sesión</h2>
+      <form id="auth-form">
+        <input type="text" id="auth-username" placeholder="Usuario" required>
+        <input type="email" id="auth-email" placeholder="Email (solo registro)">
+        <input type="password" id="auth-password" placeholder="Contraseña" required>
+        <button id="auth-submit" type="submit" class="btn">Entrar</button>
+      </form>
+      <span id="switch-to-register" class="switch">¿No tienes cuenta? Regístrate</span>
+    </div>
+  </div>
 
+  <script src="auth.js"></script>
+  <script>
+    const animes = [
+      { title: "Demon Slayer: Kimetsu no Yaiba", desc: "Tanjiro Kamado es un joven que se gana la vida para su familia vendiendo carbón...", img: "https://cdn.myanimelist.net/images/anime/1286/99889.jpg" },
+      { title: "Attack on Titan", desc: "La humanidad lucha por sobrevivir tras los muros contra los titanes devoradores de hombres.", img: "https://cdn.myanimelist.net/images/anime/10/47347.jpg" },
+      { title: "Jujutsu Kaisen", desc: "Yuji Itadori se une a una escuela de hechicería para luchar contra maldiciones poderosas.", img: "https://cdn.myanimelist.net/images/anime/1171/109222.jpg" },
+      { title: "One Piece", desc: "Monkey D. Luffy y su tripulación navegan en busca del legendario tesoro One Piece.", img: "https://cdn.myanimelist.net/images/anime/6/73245.jpg" }
+    ];
     let currentIndex = 0;
     const hero = document.getElementById("hero");
     const animeTitle = document.getElementById("anime-title");
     const animeDesc = document.getElementById("anime-desc");
     const dotsContainer = document.getElementById("dots");
     let interval;
-
-    // Crear puntos
     animes.forEach((_, i) => {
       const dot = document.createElement("div");
       dot.classList.add("dot");
@@ -143,32 +161,16 @@
       });
       dotsContainer.appendChild(dot);
     });
-
     function updateHero() {
       hero.style.backgroundImage = `url('${animes[currentIndex].img}')`;
       animeTitle.textContent = animes[currentIndex].title;
       animeDesc.textContent = animes[currentIndex].desc;
-
-      // Actualizar dots
-      document.querySelectorAll(".dot").forEach((dot, i) => {
-        dot.classList.toggle("active", i === currentIndex);
-      });
-
+      document.querySelectorAll(".dot").forEach((dot, i) => dot.classList.toggle("active", i === currentIndex));
       currentIndex = (currentIndex + 1) % animes.length;
     }
-
-    function startInterval() {
-      interval = setInterval(updateHero, 8000); // cada 8 segundos
-    }
-
-    function resetInterval() {
-      clearInterval(interval);
-      startInterval();
-    }
-
-    // Inicializar
-    updateHero();
-    startInterval();
+    function startInterval() { interval = setInterval(updateHero, 8000); }
+    function resetInterval() { clearInterval(interval); startInterval(); }
+    updateHero(); startInterval();
   </script>
 </body>
 </html>
