@@ -33,6 +33,15 @@
       text-decoration: none;
       font-weight: bold;
     }
+    .profile {
+      color: #e5e9f0;
+      font-size: 20px;
+      margin-left: 15px;
+      text-decoration: none;
+    }
+    .profile:hover {
+      color: #a4be8c;
+    }
     .hero {
       position: relative;
       height: 500px;
@@ -75,7 +84,10 @@
 <body>
   <header>
     <a href="index.html" class="logo"><i class="fas fa-dragon"></i> AnimeFlix</a>
-    <a href="player.html" class="btn"><i class="fas fa-play"></i> Ver Ahora</a>
+    <div>
+      <a href="player.html" class="btn"><i class="fas fa-play"></i> Ver Ahora</a>
+      <a href="profile.html" class="profile"><i class="fas fa-user-circle"></i></a>
+    </div>
   </header>
 
   <section class="hero" id="hero">
@@ -146,7 +158,7 @@
     }
 
     function startInterval() {
-      interval = setInterval(updateHero, 6000); // cada 6 segundos
+      interval = setInterval(updateHero, 8000); // cada 8 segundos
     }
 
     function resetInterval() {
