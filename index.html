@@ -49,6 +49,27 @@
       width: 100%;
     }
     .hero h1 { font-size: 2.5rem; }
+
+    /* Puntos de navegación */
+    .dots {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .dot.active {
+      background: #a4be8c;
+    }
   </style>
 </head>
 <body>
@@ -63,10 +84,11 @@
       <p id="anime-desc">Tanjiro Kamado es un joven que se gana la vida para su familia vendiendo carbón...</p>
       <a href="player.html" class="btn"><i class="fas fa-play"></i> Ver Ahora</a>
     </div>
+    <div class="dots" id="dots"></div>
   </section>
 
   <script>
-    // Lista de animes para el slider
+    // Lista de animes
     const animes = [
       {
         title: "Demon Slayer: Kimetsu no Yaiba",
@@ -94,19 +116,47 @@
     const hero = document.getElementById("hero");
     const animeTitle = document.getElementById("anime-title");
     const animeDesc = document.getElementById("anime-desc");
+    const dotsContainer = document.getElementById("dots");
+    let interval;
+
+    // Crear puntos
+    animes.forEach((_, i) => {
+      const dot = document.createElement("div");
+      dot.classList.add("dot");
+      if (i === 0) dot.classList.add("active");
+      dot.addEventListener("click", () => {
+        currentIndex = i;
+        updateHero();
+        resetInterval();
+      });
+      dotsContainer.appendChild(dot);
+    });
 
     function updateHero() {
       hero.style.backgroundImage = `url('${animes[currentIndex].img}')`;
       animeTitle.textContent = animes[currentIndex].title;
       animeDesc.textContent = animes[currentIndex].desc;
 
+      // Actualizar dots
+      document.querySelectorAll(".dot").forEach((dot, i) => {
+        dot.classList.toggle("active", i === currentIndex);
+      });
+
       currentIndex = (currentIndex + 1) % animes.length;
     }
 
-    // Inicializar con la primera imagen
+    function startInterval() {
+      interval = setInterval(updateHero, 6000); // cada 6 segundos
+    }
+
+    function resetInterval() {
+      clearInterval(interval);
+      startInterval();
+    }
+
+    // Inicializar
     updateHero();
-    // Cambiar cada 2 segundos
-    setInterval(updateHero, 2000);
+    startInterval();
   </script>
 </body>
 </html>
