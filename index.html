@@ -3,208 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AnimeFlix - Tu plataforma para ver anime</title>
+  <title>AnimeFlix - Inicio</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root {
-      --link_color: #97b57c;
-      --input_background: #4f596d;
-      --input_text: #e5e9f0;
-      --highlight_color: #a4be8c;
-      --highlight_text_color: #2f3541;
-      --background: #2f3541;
-      --body_text_color: #d7dde8;
-      --separator: #485164;
-      --card_color: #434c5f;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
-      color: var(--body_text_color);
-      background: var(--background);
+      margin: 0;
+      background: #2f3541;
+      color: #e5e9f0;
     }
-    header { background: var(--card_color); padding: 15px 0; position: sticky; top: 0; z-index: 1000; }
-    .container { max-width: 1200px; margin: auto; padding: 0 20px; }
-    .nav-container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-    .logo { font-size: 28px; font-weight: bold; color: var(--highlight_color); text-decoration: none; }
-    .nav-menu { display: flex; list-style: none; }
-    .nav-menu li { margin: 0 10px; }
-    .nav-menu a { color: var(--body_text_color); text-decoration: none; }
+    header {
+      background: #434c5f;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      color: #a4be8c;
+      font-weight: bold;
+      font-size: 24px;
+      text-decoration: none;
+    }
     .btn {
-      background: var(--highlight_color);
-      color: var(--highlight_text_color);
-      border: none;
+      background: #a4be8c;
+      color: #2f3541;
       padding: 10px 20px;
       border-radius: 20px;
-      cursor: pointer;
+      text-decoration: none;
       font-weight: bold;
     }
-    .btn:hover { opacity: 0.9; }
-    /* Hero */
     .hero {
       position: relative;
       height: 500px;
-      margin: 20px 0;
-      border-radius: 15px;
-      overflow: hidden;
       background: url("https://cdn.myanimelist.net/images/anime/1286/99889.jpg") center/cover no-repeat;
+      display: flex;
+      align-items: flex-end;
     }
     .hero-content {
-      position: absolute; bottom: 0; width: 100%;
-      padding: 30px;
       background: linear-gradient(transparent, rgba(0,0,0,0.8));
       color: white;
+      padding: 30px;
+      width: 100%;
     }
-    .hero-title { font-size: 2.5rem; margin-bottom: 10px; }
-    .hero-actions { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px; }
-
-    /* Reproductor */
-    #player-section {
-      padding: 40px 20px;
-      background: var(--card_color);
-      margin-top: 40px;
-      border-radius: 15px;
-    }
-    #player-section h2 { margin-bottom: 20px; }
-    .video-container { position: relative; }
-    video { width: 100%; border-radius: 10px; }
-    .player-actions {
-      display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap;
-    }
-    .like-btn.liked { color: red; }
-    .episodes {
-      margin-top: 25px;
-      display: flex; gap: 10px; flex-wrap: wrap;
-    }
-    .episode-btn {
-      background: var(--input_background);
-      color: var(--input_text);
-      border: none;
-      padding: 8px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .episode-btn.active { background: var(--highlight_color); color: var(--highlight_text_color); }
+    .hero h1 { font-size: 2.5rem; }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header>
-    <div class="container nav-container">
-      <a href="#" class="logo"><i class="fas fa-dragon"></i> AnimeFlix</a>
-      <ul class="nav-menu">
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#player-section">Ver Ahora</a></li>
-        <li><a href="#">Mi Lista</a></li>
-      </ul>
-      <button class="btn" id="login-btn"><i class="fas fa-user"></i> Iniciar Sesión</button>
-    </div>
+    <a href="index.html" class="logo"><i class="fas fa-dragon"></i> AnimeFlix</a>
+    <a href="player.html" class="btn"><i class="fas fa-play"></i> Ver Ahora</a>
   </header>
 
-  <!-- Hero -->
   <section class="hero">
     <div class="hero-content">
-      <h1 class="hero-title">Demon Slayer: Kimetsu no Yaiba</h1>
+      <h1>Demon Slayer: Kimetsu no Yaiba</h1>
       <p>Tanjiro Kamado es un joven que se gana la vida para su familia vendiendo carbón...</p>
-      <div class="hero-actions">
-        <a href="#player-section" class="btn"><i class="fas fa-play"></i> Ver Ahora</a>
-        <button class="btn add-to-list"><i class="fas fa-plus"></i> Mi Lista</button>
-      </div>
+      <a href="player.html" class="btn"><i class="fas fa-play"></i> Ver Ahora</a>
     </div>
   </section>
-
-  <!-- Reproductor -->
-  <section id="player-section" class="container">
-    <h2><i class="fas fa-play-circle"></i> Reproductor</h2>
-    <div class="video-container">
-      <video id="anime-player" controls>
-        <source src="tu-capitulo.mp4" type="video/mp4">
-        Tu navegador no soporta el reproductor de video.
-      </video>
-    </div>
-    <div class="player-actions">
-      <button class="btn like-btn"><i class="fas fa-heart"></i> Like</button>
-      <button class="btn add-to-list"><i class="fas fa-plus"></i> Agregar a Mi Lista</button>
-      <button class="btn" id="next-episode"><i class="fas fa-forward"></i> Siguiente Episodio</button>
-    </div>
-    <div class="episodes">
-      <button class="episode-btn active" data-src="cap1.mp4">Episodio 1</button>
-      <button class="episode-btn" data-src="cap2.mp4">Episodio 2</button>
-      <button class="episode-btn" data-src="cap3.mp4">Episodio 3</button>
-    </div>
-  </section>
-
-  <script>
-    // Datos guardados en localStorage
-    let userData = JSON.parse(localStorage.getItem('userData')) || {
-      isLoggedIn: false,
-      username: '',
-      myList: [],
-      likes: []
-    };
-
-    const likeBtn = document.querySelector('.like-btn');
-    const addToListBtns = document.querySelectorAll('.add-to-list');
-    const episodes = document.querySelectorAll('.episode-btn');
-    const videoPlayer = document.getElementById('anime-player');
-    const nextBtn = document.getElementById('next-episode');
-    let currentEpisodeIndex = 0;
-
-    // Like
-    likeBtn.addEventListener('click', () => {
-      if (!userData.isLoggedIn) {
-        alert("Debes iniciar sesión para dar like.");
-        return;
-      }
-      const title = document.querySelector('.hero-title').innerText;
-      if (!userData.likes.includes(title)) {
-        userData.likes.push(title);
-        likeBtn.classList.add("liked");
-      } else {
-        userData.likes = userData.likes.filter(t => t !== title);
-        likeBtn.classList.remove("liked");
-      }
-      localStorage.setItem('userData', JSON.stringify(userData));
-    });
-
-    // Mi Lista
-    addToListBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (!userData.isLoggedIn) {
-          alert("Debes iniciar sesión para agregar a tu lista.");
-          return;
-        }
-        const title = document.querySelector('.hero-title').innerText;
-        if (!userData.myList.includes(title)) {
-          userData.myList.push(title);
-          alert(title + " agregado a tu lista.");
-        } else {
-          alert(title + " ya está en tu lista.");
-        }
-        localStorage.setItem('userData', JSON.stringify(userData));
-      });
-    });
-
-    // Episodios
-    episodes.forEach((btn, index) => {
-      btn.addEventListener('click', () => {
-        episodes.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        videoPlayer.src = btn.dataset.src;
-        currentEpisodeIndex = index;
-        videoPlayer.play();
-      });
-    });
-
-    // Siguiente episodio
-    nextBtn.addEventListener('click', () => {
-      if (currentEpisodeIndex < episodes.length - 1) {
-        currentEpisodeIndex++;
-        episodes[currentEpisodeIndex].click();
-      } else {
-        alert("No hay más episodios disponibles.");
-      }
-    });
-  </script>
 </body>
 </html>
