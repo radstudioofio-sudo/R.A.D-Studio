@@ -6,58 +6,16 @@
   <title>AnimeFlix - Reproductor</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      margin: 0;
-      background: #2f3541;
-      color: #e5e9f0;
-    }
-    header {
-      background: #434c5f;
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .logo {
-      color: #a4be8c;
-      font-weight: bold;
-      font-size: 24px;
-      text-decoration: none;
-    }
-    .btn {
-      background: #a4be8c;
-      color: #2f3541;
-      padding: 8px 15px;
-      border-radius: 15px;
-      border: none;
-      cursor: pointer;
-    }
-    .container {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 20px;
-      background: #434c5f;
-      border-radius: 12px;
-    }
-    video {
-      width: 100%;
-      border-radius: 8px;
-    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background: #2f3541; color: #e5e9f0; }
+    header { background: #434c5f; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { color: #a4be8c; font-weight: bold; font-size: 24px; text-decoration: none; }
+    .btn { background: #a4be8c; color: #2f3541; padding: 8px 15px; border-radius: 15px; border: none; cursor: pointer; }
+    .container { max-width: 900px; margin: 30px auto; padding: 20px; background: #434c5f; border-radius: 12px; }
+    video { width: 100%; border-radius: 8px; }
     .actions { margin-top: 15px; display: flex; gap: 10px; }
     .episodes { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
-    .episode-btn {
-      background: #4f596d;
-      color: #e5e9f0;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .episode-btn.active {
-      background: #a4be8c;
-      color: #2f3541;
-    }
+    .episode-btn { background: #4f596d; color: #e5e9f0; padding: 8px 12px; border: none; border-radius: 8px; cursor: pointer; }
+    .episode-btn.active { background: #a4be8c; color: #2f3541; }
     .like-btn.liked { color: red; }
   </style>
 </head>
@@ -87,47 +45,34 @@
     </div>
   </div>
 
+  <script src="auth.js"></script>
   <script>
-    let userData = JSON.parse(localStorage.getItem('userData')) || {
-      isLoggedIn: true,
-      username: 'Invitado',
-      myList: [],
-      likes: []
-    };
-
     const videoPlayer = document.getElementById('anime-player');
     const likeBtn = document.querySelector('.like-btn');
     const addToListBtn = document.querySelector('.add-to-list');
     const episodes = document.querySelectorAll('.episode-btn');
     const nextBtn = document.getElementById('next-episode');
     let currentEpisodeIndex = 0;
+    const animeTitle = "Demon Slayer: Kimetsu no Yaiba";
 
-    // Like
+    function getUser() { return getCurrentUserObject(); }
+
     likeBtn.addEventListener('click', () => {
-      const title = "Demon Slayer: Kimetsu no Yaiba";
-      if (!userData.likes.includes(title)) {
-        userData.likes.push(title);
-        likeBtn.classList.add("liked");
-      } else {
-        userData.likes = userData.likes.filter(t => t !== title);
-        likeBtn.classList.remove("liked");
-      }
-      localStorage.setItem('userData', JSON.stringify(userData));
+      const user = getUser(); if (!user) return requireLogin();
+      let likes = user.likes || [];
+      if (!likes.includes(animeTitle)) { likes.push(animeTitle); likeBtn.classList.add("liked"); }
+      else { likes = likes.filter(t => t !== animeTitle); likeBtn.classList.remove("liked"); }
+      updateCurrentUserObject({ likes });
     });
 
-    // Mi Lista
     addToListBtn.addEventListener('click', () => {
-      const title = "Demon Slayer: Kimetsu no Yaiba";
-      if (!userData.myList.includes(title)) {
-        userData.myList.push(title);
-        alert(title + " agregado a tu lista.");
-      } else {
-        alert(title + " ya está en tu lista.");
-      }
-      localStorage.setItem('userData', JSON.stringify(userData));
+      const user = getUser(); if (!user) return requireLogin();
+      let myList = user.myList || [];
+      if (!myList.includes(animeTitle)) { myList.push(animeTitle); alert(animeTitle+" agregado a tu lista."); }
+      else { alert(animeTitle+" ya está en tu lista."); }
+      updateCurrentUserObject({ myList });
     });
 
-    // Episodios
     episodes.forEach((btn, index) => {
       btn.addEventListener('click', () => {
         episodes.forEach(b => b.classList.remove('active'));
@@ -135,18 +80,22 @@
         videoPlayer.src = btn.dataset.src;
         currentEpisodeIndex = index;
         videoPlayer.play();
+        saveHistory(animeTitle, "Episodio "+(index+1));
       });
     });
 
-    // Siguiente episodio
     nextBtn.addEventListener('click', () => {
       if (currentEpisodeIndex < episodes.length - 1) {
-        currentEpisodeIndex++;
-        episodes[currentEpisodeIndex].click();
-      } else {
-        alert("No hay más episodios.");
-      }
+        currentEpisodeIndex++; episodes[currentEpisodeIndex].click();
+      } else alert("No hay más episodios.");
     });
+
+    function saveHistory(title, episode) {
+      const user = getUser(); if (!user) return;
+      const history = user.history || [];
+      history.unshift({ title: title+" - "+episode, watchedAt: new Date().toLocaleString() });
+      updateCurrentUserObject({ history: history.slice(0,20) });
+    }
   </script>
 </body>
 </html>
