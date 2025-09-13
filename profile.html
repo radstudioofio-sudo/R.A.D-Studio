@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Perfil - AnimeFlix</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background:#2f3541; color:#e5e9f0; margin:0; }
+    header { background:#434c5f; padding:15px; display:flex; justify-content:space-between; align-items:center; }
+    .container { max-width:1000px; margin:30px auto; padding:20px; background:#434c5f; border-radius:12px; }
+    .section { margin-bottom:20px; }
+    .list { display:flex; gap:10px; flex-wrap:wrap; }
+    .card { background:#3b4252; padding:10px; border-radius:8px; width:200px; }
+    .btn { background:#a4be8c; color:#2f3541; padding:8px 12px; border:none; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <!-- reusar header (mejor copiar el header que ya tienes con profile btn) -->
+  <header>
+    <a href="index.html" class="logo"><i class="fas fa-dragon"></i> AnimeFlix</a>
+    <a href="index.html" class="btn">Inicio</a>
+  </header>
+
+  <div class="container">
+    <h1 id="profile-username">Perfil</h1>
+    <div class="section">
+      <button id="logout-btn" class="btn">Cerrar sesión</button>
+    </div>
+
+    <div class="section">
+      <h2>Mi Lista</h2>
+      <div id="mylist" class="list"></div>
+    </div>
+
+    <div class="section">
+      <h2>Likes</h2>
+      <div id="likes" class="list"></div>
+    </div>
+
+    <div class="section">
+      <h2>Historial</h2>
+      <div id="history" class="list"></div>
+    </div>
+  </div>
+
+  <!-- Inserta/Incluye auth.js aquí antes del script que usa sus funciones -->
+  <script>
+    // Asegúrate de incluir aquí las funciones getCurrentUserObject(), logoutCurrentUser(), getUsers(), etc.
+    // Si usas auth.js como archivo externo, no es necesario reescribir las funciones.
+    // Para simplicidad, reimplemento solo lo necesario (o asumo que auth.js ya fue cargado).
+    function getCurrentUserObject_local() {
+      const userKey = 'animeflx_current';
+      const usersKey = 'animeflx_users';
+      const username = JSON.parse(localStorage.getItem(userKey) || 'null');
+      if (!username) return null;
+      const users = JSON.parse(localStorage.getItem(usersKey) || '{}');
+      return users[username] || null;
+    }
+    function logout() {
+      localStorage.removeItem('animeflx_current');
+      window.location.href = 'index.html';
+    }
+
+    const profileUsernameEl = document.getElementById('profile-username');
+    const mylistEl = document.getElementById('mylist');
+    const likesEl = document.getElementById('likes');
+    const historyEl = document.getElementById('history');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    function renderProfile() {
+      const user = getCurrentUserObject_local();
+      if (!user) {
+        alert('Debes iniciar sesión para ver el perfil.');
+        window.location.href = 'index.html';
+        return;
+      }
+      profileUsernameEl.textContent = 'Perfil de ' + user.username;
+
+      // Render myList
+      mylistEl.innerHTML = '';
+      (user.myList || []).forEach(title => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `<strong>${title}</strong><div style="margin-top:8px;"><button class="btn" onclick="playFromProfile('${encodeURIComponent(title)}')">Ver</button></div>`;
+        mylistEl.appendChild(card);
+      });
+
+      // Render likes
+      likesEl.innerHTML = '';
+      (user.likes || []).forEach(title => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `<strong>${title}</strong>`;
+        likesEl.appendChild(card);
+      });
+
+      // Render history
+      historyEl.innerHTML = '';
+      (user.history || []).forEach(h => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `<strong>${h.title}</strong><div style="font-size:12px;color:#cfd6df;">${h.watchedAt}</div>`;
+        historyEl.appendChild(card);
+      });
+    }
+
+    function playFromProfile(titleEncoded) {
+      const title = decodeURIComponent(titleEncoded);
+      // Para simplificar: redirigir a player.html y pasar el título por querystring
+      window.location.href = 'player.html?title=' + encodeURIComponent(title);
+    }
+
+    logoutBtn.addEventListener('click', () => { logout(); });
+
+    renderProfile();
+  </script>
+</body>
+</html>
