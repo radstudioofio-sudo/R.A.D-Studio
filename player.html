@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnimeFlix - Reproductor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      margin: 0;
+      background: #2f3541;
+      color: #e5e9f0;
+    }
+    header {
+      background: #434c5f;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      color: #a4be8c;
+      font-weight: bold;
+      font-size: 24px;
+      text-decoration: none;
+    }
+    .btn {
+      background: #a4be8c;
+      color: #2f3541;
+      padding: 8px 15px;
+      border-radius: 15px;
+      border: none;
+      cursor: pointer;
+    }
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #434c5f;
+      border-radius: 12px;
+    }
+    video {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .actions { margin-top: 15px; display: flex; gap: 10px; }
+    .episodes { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .episode-btn {
+      background: #4f596d;
+      color: #e5e9f0;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .episode-btn.active {
+      background: #a4be8c;
+      color: #2f3541;
+    }
+    .like-btn.liked { color: red; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo"><i class="fas fa-dragon"></i> AnimeFlix</a>
+    <a href="index.html" class="btn">Inicio</a>
+  </header>
+
+  <div class="container">
+    <h2><i class="fas fa-play-circle"></i> Reproductor</h2>
+    <video id="anime-player" controls>
+      <source src="cap1.mp4" type="video/mp4">
+      Tu navegador no soporta el reproductor.
+    </video>
+
+    <div class="actions">
+      <button class="btn like-btn"><i class="fas fa-heart"></i> Like</button>
+      <button class="btn add-to-list"><i class="fas fa-plus"></i> Agregar a Mi Lista</button>
+      <button class="btn" id="next-episode"><i class="fas fa-forward"></i> Siguiente</button>
+    </div>
+
+    <div class="episodes">
+      <button class="episode-btn active" data-src="cap1.mp4">Episodio 1</button>
+      <button class="episode-btn" data-src="cap2.mp4">Episodio 2</button>
+      <button class="episode-btn" data-src="cap3.mp4">Episodio 3</button>
+    </div>
+  </div>
+
+  <script>
+    let userData = JSON.parse(localStorage.getItem('userData')) || {
+      isLoggedIn: true,
+      username: 'Invitado',
+      myList: [],
+      likes: []
+    };
+
+    const videoPlayer = document.getElementById('anime-player');
+    const likeBtn = document.querySelector('.like-btn');
+    const addToListBtn = document.querySelector('.add-to-list');
+    const episodes = document.querySelectorAll('.episode-btn');
+    const nextBtn = document.getElementById('next-episode');
+    let currentEpisodeIndex = 0;
+
+    // Like
+    likeBtn.addEventListener('click', () => {
+      const title = "Demon Slayer: Kimetsu no Yaiba";
+      if (!userData.likes.includes(title)) {
+        userData.likes.push(title);
+        likeBtn.classList.add("liked");
+      } else {
+        userData.likes = userData.likes.filter(t => t !== title);
+        likeBtn.classList.remove("liked");
+      }
+      localStorage.setItem('userData', JSON.stringify(userData));
+    });
+
+    // Mi Lista
+    addToListBtn.addEventListener('click', () => {
+      const title = "Demon Slayer: Kimetsu no Yaiba";
+      if (!userData.myList.includes(title)) {
+        userData.myList.push(title);
+        alert(title + " agregado a tu lista.");
+      } else {
+        alert(title + " ya está en tu lista.");
+      }
+      localStorage.setItem('userData', JSON.stringify(userData));
+    });
+
+    // Episodios
+    episodes.forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        episodes.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        videoPlayer.src = btn.dataset.src;
+        currentEpisodeIndex = index;
+        videoPlayer.play();
+      });
+    });
+
+    // Siguiente episodio
+    nextBtn.addEventListener('click', () => {
+      if (currentEpisodeIndex < episodes.length - 1) {
+        currentEpisodeIndex++;
+        episodes[currentEpisodeIndex].click();
+      } else {
+        alert("No hay más episodios.");
+      }
+    });
+  </script>
+</body>
+</html>
