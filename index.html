@@ -36,9 +36,11 @@
     .hero {
       position: relative;
       height: 500px;
-      background: url("https://cdn.myanimelist.net/images/anime/1286/99889.jpg") center/cover no-repeat;
+      background-size: cover;
+      background-position: center;
       display: flex;
       align-items: flex-end;
+      transition: background-image 1s ease-in-out;
     }
     .hero-content {
       background: linear-gradient(transparent, rgba(0,0,0,0.8));
@@ -55,12 +57,56 @@
     <a href="player.html" class="btn"><i class="fas fa-play"></i> Ver Ahora</a>
   </header>
 
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="hero-content">
-      <h1>Demon Slayer: Kimetsu no Yaiba</h1>
-      <p>Tanjiro Kamado es un joven que se gana la vida para su familia vendiendo carbón...</p>
+      <h1 id="anime-title">Demon Slayer: Kimetsu no Yaiba</h1>
+      <p id="anime-desc">Tanjiro Kamado es un joven que se gana la vida para su familia vendiendo carbón...</p>
       <a href="player.html" class="btn"><i class="fas fa-play"></i> Ver Ahora</a>
     </div>
   </section>
+
+  <script>
+    // Lista de animes para el slider
+    const animes = [
+      {
+        title: "Demon Slayer: Kimetsu no Yaiba",
+        desc: "Tanjiro Kamado es un joven que se gana la vida para su familia vendiendo carbón...",
+        img: "https://cdn.myanimelist.net/images/anime/1286/99889.jpg"
+      },
+      {
+        title: "Attack on Titan",
+        desc: "La humanidad lucha por sobrevivir tras los muros contra los titanes devoradores de hombres.",
+        img: "https://cdn.myanimelist.net/images/anime/10/47347.jpg"
+      },
+      {
+        title: "Jujutsu Kaisen",
+        desc: "Yuji Itadori se une a una escuela de hechicería para luchar contra maldiciones poderosas.",
+        img: "https://cdn.myanimelist.net/images/anime/1171/109222.jpg"
+      },
+      {
+        title: "One Piece",
+        desc: "Monkey D. Luffy y su tripulación navegan en busca del legendario tesoro One Piece.",
+        img: "https://cdn.myanimelist.net/images/anime/6/73245.jpg"
+      }
+    ];
+
+    let currentIndex = 0;
+    const hero = document.getElementById("hero");
+    const animeTitle = document.getElementById("anime-title");
+    const animeDesc = document.getElementById("anime-desc");
+
+    function updateHero() {
+      hero.style.backgroundImage = `url('${animes[currentIndex].img}')`;
+      animeTitle.textContent = animes[currentIndex].title;
+      animeDesc.textContent = animes[currentIndex].desc;
+
+      currentIndex = (currentIndex + 1) % animes.length;
+    }
+
+    // Inicializar con la primera imagen
+    updateHero();
+    // Cambiar cada 2 segundos
+    setInterval(updateHero, 2000);
+  </script>
 </body>
 </html>
